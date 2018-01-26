@@ -47,3 +47,4 @@ massif.*
 syntax: glob
 TAGS
 waf
+.git
