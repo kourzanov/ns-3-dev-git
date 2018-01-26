@@ -1,19 +1,19 @@
 # -*-  Mode: Python; -*-
 #  Copyright (c) 2009 INESC Porto
-# 
+#
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License version 2 as
 #  published by the Free Software Foundation;
-# 
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-# 
+#
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-# 
+#
 #  Authors: Gustavo Carneiro <gjc@inescporto.pt>
 
 import sys
@@ -44,7 +44,7 @@ def main(argv):
     cmd.Results = None
     cmd.AddValue("Results", "Write XML results to file")
 
-    cmd.Plot = None
+    cmd.Plot = 1
     cmd.AddValue("Plot", "Plot the results using the matplotlib python module")
 
     cmd.Parse(argv)
@@ -96,7 +96,7 @@ def main(argv):
             mobility = ns.mobility.ConstantPositionMobilityModel()
             mobility.SetPosition(ns.core.Vector(xi*DISTANCE, yi*DISTANCE, 0))
             node.AggregateObject(mobility)
-            
+
             devices = wifi.Install(wifiPhy, wifiMac, node)
             ipv4_interfaces = ipv4Addresses.Assign(devices)
             addresses.append(ipv4_interfaces.GetAddress(0))
@@ -183,4 +183,3 @@ def main(argv):
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
-

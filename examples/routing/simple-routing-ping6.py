@@ -32,6 +32,10 @@ import ns.core
 import ns.csma
 import ns.internet
 import ns.network
+try:
+    import ns.visualizer
+except ImportError:
+    pass
 
 def main(argv):
 
