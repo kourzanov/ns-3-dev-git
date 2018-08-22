@@ -4,7 +4,7 @@ from __future__ import division
 
 LAYOUT_ALGORITHM = 'neato' # ['neato'|'dot'|'twopi'|'circo'|'fdp'|'nop']
 REPRESENT_CHANNELS_AS_NODES = 1
-DEFAULT_NODE_SIZE = 3.0 # default node size in meters
+DEFAULT_NODE_SIZE = 0.3 # default node size in meters
 DEFAULT_TRANSMISSIONS_MEMORY = 5 # default number of of past intervals whose transmissions are remembered
 BITRATE_FONT_SIZE = 10
 
@@ -137,7 +137,7 @@ class Node(PyVizObject):
         self._label_canvas_item = None
 
         self._update_appearance() # call this last
- 
+
     def set_svg_icon(self, file_base_name, width=None, height=None, align_x=0.5, align_y=0.5):
         """!
         Set a background SVG icon for the node.
@@ -145,7 +145,7 @@ class Node(PyVizObject):
         @param file_base_name: base file name, including .svg
         extension, of the svg file.  Place the file in the folder
         src/contrib/visualizer/resource.
-        
+
         @param width: scale to the specified width, in meters
         @param height: scale to the specified height, in meters
 
@@ -210,7 +210,7 @@ class Node(PyVizObject):
         h = self.svg_item.height
         self.svg_item.set_properties(x=(x - (1-self.svg_align_x)*w),
                                      y=(y - (1-self.svg_align_y)*h))
-        
+
 
     def tooltip_query(self, tooltip):
         """!
@@ -225,7 +225,7 @@ class Node(PyVizObject):
             ns3_node = ns.network.NodeList.GetNode(self.node_index)
             ipv4 = ns3_node.GetObject(ns.internet.Ipv4.GetTypeId())
             ipv6 = ns3_node.GetObject(ns.internet.Ipv6.GetTypeId())
-        
+
             name = '<b><u>Node %i</u></b>' % self.node_index
             node_name = ns.core.Names.FindName (ns3_node)
             if len(node_name)!=0:
@@ -267,7 +267,7 @@ class Node(PyVizObject):
                                        ipv6.GetAddress(ipv6_idx, i).GetPrefix())
                             for i in range(ipv6.GetNAddresses(ipv6_idx))]
                         lines.append('    <b>IPv6 Addresses:</b> %s' % '; '.join(addresses))
-                            
+
                 lines.append('    <b>MAC Address:</b> %s' % (dev.GetAddress(),))
 
             tooltip.set_markup('\n'.join(lines))
@@ -315,7 +315,7 @@ class Node(PyVizObject):
         @return selected status
         """
         return self._selected
-    
+
     selected = property(_get_selected, _set_selected)
 
     def _set_highlighted(self, value):
@@ -336,9 +336,9 @@ class Node(PyVizObject):
         @return highlighted status
         """
         return self._highlighted
-    
+
     highlighted = property(_get_highlighted, _set_highlighted)
-    
+
     def set_size(self, size):
         """!
         Set size function.
@@ -390,7 +390,7 @@ class Node(PyVizObject):
             self._label_canvas_item.set_properties(visibility=goocanvas.ITEM_VISIBLE_ABOVE_THRESHOLD,
                                                    text=self._label)
             self._update_position()
-    
+
     def set_position(self, x, y):
         """!
         Set position function.
@@ -506,7 +506,7 @@ class Channel(PyVizObject):
                                              visibility=goocanvas.ITEM_VISIBLE)
         self.canvas_item.set_data("pyviz-object", self)
         self.links = []
-    
+
     def set_position(self, x, y):
         """!
         Initializer function.
@@ -619,7 +619,7 @@ class SimulationThread(threading.Thread):
             self.sim_helper.SetNodesOfInterest(nodes)
         finally:
             self.lock.release()
-        
+
     def run(self):
         """!
         Initializer function.
@@ -661,7 +661,7 @@ class ShowTransmissionsMode(object):
     #  none
     ## @var SELECTED
     #  seleced
-    ## @var __slots__ 
+    ## @var __slots__
     #  enumeration
     __slots__ = []
 ShowTransmissionsMode.ALL = ShowTransmissionsMode()
@@ -794,7 +794,7 @@ class Visualizer(gobject.GObject):
         selected_node.set_label("Selected node")
         selected_node.set_active(False)
         vbox.add(selected_node)
-        
+
         no_node = gtk.RadioButton(all_nodes)
         no_node.show()
         no_node.set_label("Disabled")
@@ -816,7 +816,7 @@ class Visualizer(gobject.GObject):
                 self.set_show_transmissions_mode(ShowTransmissionsMode.SELECTED)
         selected_node.connect("toggled", toggled)
 
-        
+
         # -- misc settings
         misc_settings_group = HIGContainer("Misc Settings")
         misc_settings_group.show()
@@ -884,7 +884,7 @@ class Visualizer(gobject.GObject):
         self.canvas.window.set_cursor(None)
         self.canvas.disconnect(self._panning_state.motion_signal)
         self._panning_state = None
-        
+
     def _panning_motion(self, widget, event):
         """!
         Panning motion function.
@@ -904,7 +904,7 @@ class Visualizer(gobject.GObject):
         vadj = self._scrolled_window.get_vadjustment()
         mx0, my0 = self._panning_state.initial_mouse_pos
         cx0, cy0 = self._panning_state.initial_canvas_pos
-        
+
         dx = x - mx0
         dy = y - my0
         hadj.value = cx0 - dx
@@ -922,7 +922,7 @@ class Visualizer(gobject.GObject):
             self._end_panning(event)
             return True
         return False
-    
+
     def _canvas_scroll_event(self, dummy_widget, event):
         if event.direction == gtk.gdk.SCROLL_UP:
             self.zoom.value *= 1.25
@@ -961,7 +961,7 @@ class Visualizer(gobject.GObject):
 
         self.canvas.get_root_item().add_child(self.links_group)
         self.links_group.set_property("visibility", goocanvas.ITEM_VISIBLE)
-        
+
         self.canvas.get_root_item().add_child(self.channels_group)
         self.channels_group.set_property("visibility", goocanvas.ITEM_VISIBLE)
         self.channels_group.raise_(self.links_group)
@@ -1053,7 +1053,7 @@ class Visualizer(gobject.GObject):
         self.canvas.get_root_item().connect("button-press-event", self.on_root_button_press_event)
 
         vbox.pack_start(self._create_advanced_controls(), False, False, 4)
-        
+
         self.window.show()
 
     def scan_topology(self):
@@ -1160,10 +1160,10 @@ class Visualizer(gobject.GObject):
         #print "update_view"
 
         self.time_label.set_text("Time: %f s" % ns.core.Simulator.Now().GetSeconds())
-        
+
         self._update_node_positions()
 
-        # Update information 
+        # Update information
         for info_win in self.information_windows:
             info_win.update()
 
@@ -1197,14 +1197,14 @@ class Visualizer(gobject.GObject):
             pass
         else:
             raise TypeError("expected int, viz.Node or ns.network.Node, not %r" % node)
-        
+
         x, y = node.get_position()
         hadj = self._scrolled_window.get_hadjustment()
         vadj = self._scrolled_window.get_vadjustment()
         px, py = self.canvas.convert_to_pixels(x, y)
         hadj.value = px - hadj.page_size/2
         vadj.value = py - vadj.page_size/2
-        
+
 
     def update_model(self):
         self.simulation.lock.acquire()
@@ -1219,7 +1219,7 @@ class Visualizer(gobject.GObject):
         transmissions = self.simulation.sim_helper.GetTransmissionSamples()
         self._last_transmissions.append(transmissions)
         while len(self._last_transmissions) > smooth_factor:
-            self._last_transmissions.pop(0)            
+            self._last_transmissions.pop(0)
 
         drops = self.simulation.sim_helper.GetPacketDropSamples()
         self._last_drops.append(drops)
@@ -1266,7 +1266,7 @@ class Visualizer(gobject.GObject):
                 arrow.set_property("parent", self.canvas.get_root_item())
                 arrow.props.pointer_events = 0
                 arrow.raise_(None)
-                
+
                 label = goocanvas.Text(parent=self.canvas.get_root_item(), pointer_events=0)
                 label.raise_(None)
 
@@ -1305,7 +1305,7 @@ class Visualizer(gobject.GObject):
                 label.set_transform(M)
 
             new_arrows.append((arrow, label))
-            
+
         self._transmission_arrows = new_arrows + old_arrows
 
 
@@ -1341,7 +1341,7 @@ class Visualizer(gobject.GObject):
                 arrow.props.pointer_events = 0
                 arrow.set_property("parent", self.canvas.get_root_item())
                 arrow.raise_(None)
-                
+
                 label = goocanvas.Text()#, fill_color_rgba=0x00C000C0)
                 label.props.pointer_events = 0
                 label.set_property("parent", self.canvas.get_root_item())
@@ -1363,10 +1363,10 @@ class Visualizer(gobject.GObject):
                                  y=(pos1_y + pos2_y)/2)
 
             new_arrows.append((arrow, label))
-            
+
         self._drop_arrows = new_arrows + old_arrows
-            
-                
+
+
     def update_view_timeout(self):
         #print "view: update_view_timeout called at real time ", time.time()
 
@@ -1442,7 +1442,7 @@ class Visualizer(gobject.GObject):
                 #print "unlock"
                 self.simulation.lock.release()
         import types
-        self.ipython.runcode = types.MethodType(runcode, self.ipython)                
+        self.ipython.runcode = types.MethodType(runcode, self.ipython)
 
     def autoscale_view(self):
         if not self.nodes:
@@ -1472,7 +1472,7 @@ class Visualizer(gobject.GObject):
         height = y2 - y1
         center_x = (min_x + max_x) / 2
         center_y = (min_y + max_y) / 2
-        
+
         self.canvas.scroll_to(center_x - width/2, center_y - height/2)
 
         return False
@@ -1536,7 +1536,7 @@ class Visualizer(gobject.GObject):
                 return
             pos = mob.GetPosition()
         finally:
-            self.simulation.lock.release()            
+            self.simulation.lock.release()
         x, y, dummy = self.canvas.window.get_pointer()
         x0, y0 = self.canvas.convert_from_pixels(x, y)
         self.node_drag_state = self.NodeDragState(x0, y0, pos.x, pos.y)
@@ -1562,7 +1562,7 @@ class Visualizer(gobject.GObject):
             mob.SetPosition(pos)
             node.set_position(*transform_point_simulation_to_canvas(pos.x, pos.y))
         finally:
-            self.simulation.lock.release()            
+            self.simulation.lock.release()
         return True
 
     def end_node_drag(self, node):
@@ -1636,7 +1636,7 @@ class Visualizer(gobject.GObject):
 
     def remove_information_window(self, info_win):
         self.information_windows.remove(info_win)
-        
+
     def _canvas_tooltip_cb(self, canvas, x, y, keyboard_mode, tooltip):
         #print "tooltip query: ", x, y
         hadj = self._scrolled_window.get_hadjustment()
@@ -1683,7 +1683,7 @@ class Visualizer(gobject.GObject):
         if resp != gtk.RESPONSE_OK:
             sel.destroy()
             return None
-        
+
         file_name = sel.get_filename()
         sel.destroy()
         return file_name
@@ -1741,7 +1741,7 @@ class Visualizer(gobject.GObject):
         if self.shell_window is not None:
             self.shell_window.present()
             return
-        
+
         self.shell_window = gtk.Window()
         self.shell_window.set_size_request(750,550)
         self.shell_window.set_resizable(True)
