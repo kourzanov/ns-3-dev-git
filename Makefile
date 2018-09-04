@@ -3,6 +3,9 @@
 all:
 	./waf
 
+run:
+	./waf --run 80211p-interference --vis
+
 # free free to change this part to suit your requirements
 configure:
 	./waf configure --enable-examples --enable-tests
